@@ -1,0 +1,67 @@
+header{
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.logo{
+    width: 200px;
+}
+
+main{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+
+h1{
+    margin: 20px;
+}
+
+article{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.sections{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.card-articles{
+    margin: 20px;
+}
+
+.none{
+    display: none;
+}
+
+.card-product{
+    flex-direction: row;
+    width: 100%;
+    margin: 20px;
+}
+
+.imgs-products{
+    width: 400px;
+}
+
+.list-qte, .list-coul{
+    margin: 20px 20px 20px 0px;
+}
+
+.icone-panier{
+    cursor: pointer;
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+}
+
+.compteur{
+    margin-right: 10px;
+    font-size: 1.5em;
+}
