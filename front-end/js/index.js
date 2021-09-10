@@ -1,5 +1,6 @@
 
-const urlApi = "http://localhost:3000/api/teddies";
+const URLAPI = "http://localhost:3000/api/teddies";
+
 
 apiHome();
 apiProducts();
@@ -8,9 +9,10 @@ afficheProducts();
 afficheForm();
 compteurPanier();
 
+
 //// Récup datas API plus ajouts des datas sur page d'accueil
 function apiHome(){
-    fetch(urlApi)
+    fetch(URLAPI)
     .then(response => test = response.json())
     .then(data =>{
     for(let i = 0; i < data.length; i++){
@@ -28,7 +30,7 @@ function apiHome(){
 };
 //// Récup datas API plus ajouts des datas sur page produits
 function apiProducts(){
-    fetch(urlApi)
+    fetch(URLAPI)
     .then(response => test = response.json())
     .then(data =>{
     for(let i = 0; i < data.length; i++){
@@ -40,7 +42,7 @@ function apiProducts(){
             `<p class="card-text">`+data[i].description+`</p>`+
             `<select class="form-select list-qte" aria-label="Default select example">`+
                 `<option selected>Quantité</option>`+
-                `<option value="1">1</option>`+
+                `<option value="1"">1</option>`+
                 `<option value="2">2</option>`+
                 `<option value="3">3</option>`+
             `</select>`+
@@ -55,7 +57,7 @@ function apiProducts(){
 };
 //// Récup datas API pour la liste des couleurs des produits
 function apiListCoul(){
-    fetch(urlApi)
+    fetch(URLAPI)
     .then(response => test = response.json())
     .then(data =>{
         for(let i = 0; i < data.length; i++){
@@ -70,21 +72,21 @@ function apiListCoul(){
 };
 //// Affiche le produits après un clique sur le bouton décourvir et masque tous les éléments card-articles
 function afficheProducts(){
-    fetch(urlApi)
+    fetch(URLAPI)
     .then(response => test = response.json())
     .then(data =>{
     
         let click = 0;
     
         for(let i = 0; i < data.length; i++){
-            const btnDecouvrir = new Array(); 
-            btnDecouvrir[i] = document.querySelector("#btn-decouvrir-"+i);
-            const product = new Array();
-            product[i] = document.querySelector("#product-"+i)
+            const BTNDECOUVIRI = new Array(); 
+            BTNDECOUVIRI[i] = document.querySelector("#btn-decouvrir-"+i);
+            const PRODUCT = new Array();
+            PRODUCT[i] = document.querySelector("#product-"+i)
             
     
-            btnDecouvrir[i].addEventListener("click", ()=>{
-                product[i].classList.remove("none")
+            BTNDECOUVIRI[i].addEventListener("click", ()=>{
+                PRODUCT[i].classList.remove("none")
                 click++
     
                 if(click > 0){
@@ -100,16 +102,16 @@ function afficheProducts(){
 };
 //// Affiche le formulaire lors du clique sur l'icone panier et masque tous les éléments card-articles
 function afficheForm(){
-    const form = document.querySelector("form");
-    const iconePanier = document.querySelector(".icone-panier");
+    const FORM = document.querySelector("form");
+    const ICONEPANIER = document.querySelector(".icone-panier");
     
-    fetch(urlApi)
+    fetch(URLAPI)
     .then(response => test = response.json())
     .then(data =>{
     let click = 0;
     
-        iconePanier.addEventListener("click", ()=>{
-            form.classList.remove("none");
+        ICONEPANIER.addEventListener("click", ()=>{
+            FORM.classList.remove("none");
             click++
             
             if(click > 0){
@@ -126,35 +128,74 @@ function afficheForm(){
     });
 };
 
-
+//// Icremente le compteur du panier après un clique sur le bouton ajouter au panier
 function compteurPanier(){
-    fetch(urlApi)
+    fetch(URLAPI)
     .then(response => test = response.json())
     .then(data =>{
-        const compteur = document.querySelector(".compteur");
-        const btnAjout = new Array();
+        let compteur = document.querySelector(".compteur");
+        const BTNAJOUT = new Array();
         let total = 0;
-    
+      
         for(let i = 0; i < data.length; i++){
-            btnAjout[i] = document.querySelector("#btn-ajout-"+i);  
-            
-            btnAjout[i].addEventListener("click", () =>{
-                let i = 0;
-
-                i++;
-                total = total + i;
-
-                localStorage.setItem("compteur", total);
-                let test = localStorage.getItem("compteur");
-
-                console.log(test);
-
-                compteur.innerHTML = test;            
-            });
+            BTNAJOUT[i] = document.querySelector("#btn-ajout-"+i);  
         };
+
+        BTNAJOUT[0].addEventListener("click", () =>{
+            let iPanier = 0;
+            iPanier++;
+            total = total + iPanier;
+            localStorage.setItem("compteurLocal-0", total);                    
+            compteur.innerHTML = localStorage.getItem("compteurLocal-0");             
+        });   
+
+        BTNAJOUT[1].addEventListener("click", () =>{
+            let iPanier = 0;
+            iPanier++;
+            total = total + iPanier;
+            localStorage.setItem("compteurLocal-1", total);                
+            compteur.innerHTML = localStorage.getItem("compteurLocal-1");  
+        });
+
+        BTNAJOUT[2].addEventListener("click", () =>{
+            let iPanier = 0;
+            iPanier++;
+            total = total + iPanier;
+            localStorage.setItem("compteurLocal-2", total);                
+            compteur.innerHTML = localStorage.getItem("compteurLocal-2");    
+        });   
+
+        BTNAJOUT[3].addEventListener("click", () =>{
+            let iPanier = 0;
+            iPanier++;
+            total = total + iPanier;
+            localStorage.setItem("compteurLocal-3", total);                
+            compteur.innerHTML = localStorage.getItem("compteurLocal-3");    
+        });   
+
+        BTNAJOUT[4].addEventListener("click", () =>{
+            let iPanier = 0;
+            iPanier++;
+            total = total + iPanier;
+            localStorage.setItem("compteurLocal-4", total);                
+            compteur.innerHTML = localStorage.getItem("compteurLocal-4");  
+        });   
+
+        let compteurLocalS = new Array();
+        let compteurLocalN = new Array();
+        let compteurLocalTotal = 0;
+
+        for(let i = 0; i < data.length; i++){
+            compteurLocalS[i] = localStorage.getItem("compteurLocal-"+i);
+            compteurLocalN[i] = Number(compteurLocalS[i]);
+            compteurLocalTotal += compteurLocalN[i];
+        }
+              
+        compteur.innerHTML = compteurLocalTotal;
+
+        console.log(compteurLocalTotal);
+
     });
 };
 
-
-
-
+//// 
