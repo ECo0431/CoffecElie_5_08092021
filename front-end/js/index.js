@@ -1,12 +1,12 @@
 
 const URLAPI = "http://localhost:3000/api/teddies";
 
-
 apiHome();
 apiProducts();
 apiListCoul();
 afficheProducts();
 afficheForm();
+ajoutArticle();
 
 
 //// Récup datas API plus ajouts des datas sur page d'accueil
@@ -124,46 +124,62 @@ function afficheForm(){
 };
 
 //// Ajoute les articles dans le local storage
-fetch(URLAPI)
-.then(response => test = response.json())
-.then(data =>{
-
-    const BTNAJOUT = new Array();
-    const QTE = new Array();
-    const COUL = new Array();
-
-    for(let i = 0; i < data.length; i++){
-        BTNAJOUT[i] = document.querySelector("#btn-ajout-"+i);
-        QTE[i] = document.querySelector("#qte-"+i);
-        COUL[i] = document.querySelector("#list-coul-"+i);
-    };
-
-    let produits = JSON.parse(localStorage.getItem("produits"));
-
-    for(let i = 0; i < data.length; i++){
-        BTNAJOUT[i].addEventListener("click", ()=>{
-            const QTENUMBER = Number(QTE[i].value);
-  
-            let articles = {
-                id: data[i]._id,
-                name: data[i].name,
-                price: data[i].price,
-                totalPrice: data[i].price*QTE[i].value,
-                qte: QTENUMBER,
-                imageUrl: data[i].imageUrl,
-                coul: COUL[i].value
-            };
+function ajoutArticle(){
+    fetch(URLAPI)
+    .then(response => test = response.json())
+    .then(data =>{
+    
+        const BTNAJOUT = new Array();
+        const QTE = new Array();
+        const COUL = new Array();
+        const COMPTEUR = document.querySelector(".compteur");
+    
+        for(let i = 0; i < data.length; i++){
+            BTNAJOUT[i] = document.querySelector("#btn-ajout-"+i);
+            QTE[i] = document.querySelector("#qte-"+i);
+            COUL[i] = document.querySelector("#list-coul-"+i);
+        };
+    
+        let produits = JSON.parse(localStorage.getItem("produits"));
+    
+        for(let i = 0; i < data.length; i++){
+            BTNAJOUT[i].addEventListener("click", ()=>{
+                const QTENUMBER = Number(QTE[i].value);
                 
-            if(produits){
-                produits.push(articles);
-                localStorage.setItem("produits", JSON.stringify(produits));
-                console.table(produits);
-            }else{
-                produits = [];
-                produits.push(articles);
-                localStorage.setItem("produits", JSON.stringify(produits));
-                console.log(produits);
-            };
-        });
-    };
-});
+                let articles = {
+                    id: data[i]._id,
+                    name: data[i].name,
+                    price: data[i].price,
+                    totalPrice: data[i].price*QTE[i].value,
+                    qte: QTENUMBER,
+                    imageUrl: data[i].imageUrl,
+                    coul: COUL[i].value
+                };
+                    
+                if(produits){
+                    produits.push(articles);
+                    localStorage.setItem("produits", JSON.stringify(produits));
+                }else{
+                    produits = [];
+                    produits.push(articles);
+                    localStorage.setItem("produits", JSON.stringify(produits));
+                };
+
+                //Compteur Panier
+
+                let qteTable = [];
+
+                for(let i = 0; i < produits.length; i++){
+
+                    let qtePanier = produits[i].qte;               
+                    qteTable.push(qtePanier);
+                };        
+                
+                const reducer = (acc, curr) => acc + curr;
+                const totalQte = qteTable.reduce(reducer);
+                COMPTEUR.innerHTML = totalQte;
+            });
+        };
+    });
+};
+
