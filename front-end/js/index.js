@@ -7,7 +7,6 @@ apiProducts();
 apiListCoul();
 afficheProducts();
 afficheForm();
-compteurPanier();
 
 
 //// Récup datas API plus ajouts des datas sur page d'accueil
@@ -40,16 +39,13 @@ function apiProducts(){
         `<div class="card-body">`+
             `<h2 class="card-title">`+data[i].name+`</h2>`+
             `<p class="card-text">`+data[i].description+`</p>`+
-            `<select class="form-select list-qte" aria-label="Default select example">`+
-                `<option selected>Quantité</option>`+
-                `<option value="1"">1</option>`+
-                `<option value="2">2</option>`+
-                `<option value="3">3</option>`+
+            `<input type="number" id="qte-`+i+`" name="qte-" min="1" max="99" value="1">`+
+            `<select class="form-select list-coul" id="list-coul-`+i+`" aria-label="Default select example">`+               
             `</select>`+
-            `<select class="form-select list-coul" id="list-coul-`+i+`" aria-label="Default select example">`+  
-            `<option selected>Couleurs</option>`+                
-            `</select>`+
+            `<div class="box-btn-prix">`+
             `<a href="#" class="btn btn-dark" id="btn-ajout-`+i+`">Ajouter au panier</a>`+
+            `<p>`+data[i].price/100+` €</p>`+
+            `</div>`+
         `</div>`+
     `</section>`
     };
@@ -64,7 +60,7 @@ function apiListCoul(){
             let x = 0;
             while(x < data[i].colors.length){
                 document.querySelector("#list-coul-"+i).innerHTML +=                      
-                `<option value="1">`+data[i].colors[x]+`</option>`
+                `<option value="`+x+`">`+data[i].colors[x]+`</option>`
                 x++
             };   
         };
@@ -79,13 +75,12 @@ function afficheProducts(){
         let click = 0;
     
         for(let i = 0; i < data.length; i++){
-            const BTNDECOUVIRI = new Array(); 
-            BTNDECOUVIRI[i] = document.querySelector("#btn-decouvrir-"+i);
+            const BTNDECOUVRIR = new Array(); 
+            BTNDECOUVRIR[i] = document.querySelector("#btn-decouvrir-"+i);
             const PRODUCT = new Array();
             PRODUCT[i] = document.querySelector("#product-"+i)
-            
     
-            BTNDECOUVIRI[i].addEventListener("click", ()=>{
+            BTNDECOUVRIR[i].addEventListener("click", ()=>{
                 PRODUCT[i].classList.remove("none")
                 click++
     
@@ -128,74 +123,47 @@ function afficheForm(){
     });
 };
 
-//// Icremente le compteur du panier après un clique sur le bouton ajouter au panier
-function compteurPanier(){
-    fetch(URLAPI)
-    .then(response => test = response.json())
-    .then(data =>{
-        let compteur = document.querySelector(".compteur");
-        const BTNAJOUT = new Array();
-        let total = 0;
-      
-        for(let i = 0; i < data.length; i++){
-            BTNAJOUT[i] = document.querySelector("#btn-ajout-"+i);  
-        };
+//// Ajoute les articles dans le local storage
+fetch(URLAPI)
+.then(response => test = response.json())
+.then(data =>{
 
-        BTNAJOUT[0].addEventListener("click", () =>{
-            let iPanier = 0;
-            iPanier++;
-            total = total + iPanier;
-            localStorage.setItem("compteurLocal-0", total);                    
-            compteur.innerHTML = localStorage.getItem("compteurLocal-0");             
-        });   
+    const BTNAJOUT = new Array();
+    const QTE = new Array();
+    const COUL = new Array();
 
-        BTNAJOUT[1].addEventListener("click", () =>{
-            let iPanier = 0;
-            iPanier++;
-            total = total + iPanier;
-            localStorage.setItem("compteurLocal-1", total);                
-            compteur.innerHTML = localStorage.getItem("compteurLocal-1");  
+    for(let i = 0; i < data.length; i++){
+        BTNAJOUT[i] = document.querySelector("#btn-ajout-"+i);
+        QTE[i] = document.querySelector("#qte-"+i);
+        COUL[i] = document.querySelector("#list-coul-"+i);
+    };
+
+    let produits = JSON.parse(localStorage.getItem("produits"));
+
+    for(let i = 0; i < data.length; i++){
+        BTNAJOUT[i].addEventListener("click", ()=>{
+            const QTENUMBER = Number(QTE[i].value);
+  
+            let articles = {
+                id: data[i]._id,
+                name: data[i].name,
+                price: data[i].price,
+                totalPrice: data[i].price*QTE[i].value,
+                qte: QTENUMBER,
+                imageUrl: data[i].imageUrl,
+                coul: COUL[i].value
+            };
+                
+            if(produits){
+                produits.push(articles);
+                localStorage.setItem("produits", JSON.stringify(produits));
+                console.table(produits);
+            }else{
+                produits = [];
+                produits.push(articles);
+                localStorage.setItem("produits", JSON.stringify(produits));
+                console.log(produits);
+            };
         });
-
-        BTNAJOUT[2].addEventListener("click", () =>{
-            let iPanier = 0;
-            iPanier++;
-            total = total + iPanier;
-            localStorage.setItem("compteurLocal-2", total);                
-            compteur.innerHTML = localStorage.getItem("compteurLocal-2");    
-        });   
-
-        BTNAJOUT[3].addEventListener("click", () =>{
-            let iPanier = 0;
-            iPanier++;
-            total = total + iPanier;
-            localStorage.setItem("compteurLocal-3", total);                
-            compteur.innerHTML = localStorage.getItem("compteurLocal-3");    
-        });   
-
-        BTNAJOUT[4].addEventListener("click", () =>{
-            let iPanier = 0;
-            iPanier++;
-            total = total + iPanier;
-            localStorage.setItem("compteurLocal-4", total);                
-            compteur.innerHTML = localStorage.getItem("compteurLocal-4");  
-        });   
-
-        let compteurLocalS = new Array();
-        let compteurLocalN = new Array();
-        let compteurLocalTotal = 0;
-
-        for(let i = 0; i < data.length; i++){
-            compteurLocalS[i] = localStorage.getItem("compteurLocal-"+i);
-            compteurLocalN[i] = Number(compteurLocalS[i]);
-            compteurLocalTotal += compteurLocalN[i];
-        }
-              
-        compteur.innerHTML = compteurLocalTotal;
-
-        console.log(compteurLocalTotal);
-
-    });
-};
-
-//// 
+    };
+});
