@@ -42,12 +42,20 @@ article{
 
 .card-product{
     flex-direction: row;
-    width: 100%;
+    justify-content: center;
+    align-items: center;
     margin: 20px;
+}
+
+@media screen and (max-width: 796px) {
+    .card-product{
+        flex-wrap: wrap;
+    }
 }
 
 .imgs-products{
     width: 400px;
+
 }
 
 .list-qte, .list-coul{
@@ -72,4 +80,24 @@ article{
     font-weight: bold;
     font-size: 2em;
     align-items: center;
+}
+
+.img-panier{
+    width: 150px;
+}
+
+.section-panier{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-panier p{
+    margin: 20px 20px 20px 20px;
+
+}
+
+.prixTotalArticlePanier{
+    font-weight: bold;
+    font-size: 1em;
 }

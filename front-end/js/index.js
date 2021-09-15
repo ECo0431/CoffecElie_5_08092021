@@ -1,4 +1,5 @@
 
+
 const URLAPI = "http://localhost:3000/api/teddies";
 
 apiHome();
@@ -7,6 +8,7 @@ apiListCoul();
 afficheProducts();
 afficheForm();
 ajoutArticle();
+
 
 
 //// Récup datas API plus ajouts des datas sur page d'accueil
@@ -125,6 +127,7 @@ function afficheForm(){
 
 //// Ajoute les articles dans le local storage
 function ajoutArticle(){
+
     fetch(URLAPI)
     .then(response => test = response.json())
     .then(data =>{
@@ -146,7 +149,7 @@ function ajoutArticle(){
             BTNAJOUT[i].addEventListener("click", ()=>{
                 const QTENUMBER = Number(QTE[i].value);
                 
-                let articles = {
+                var articles = {
                     id: data[i]._id,
                     name: data[i].name,
                     price: data[i].price,
@@ -159,10 +162,12 @@ function ajoutArticle(){
                 if(produits){
                     produits.push(articles);
                     localStorage.setItem("produits", JSON.stringify(produits));
+                    console.table(produits)
                 }else{
                     produits = [];
                     produits.push(articles);
                     localStorage.setItem("produits", JSON.stringify(produits));
+                    console.table(produits)
                 };
 
                 //Compteur Panier
@@ -174,12 +179,32 @@ function ajoutArticle(){
                     let qtePanier = produits[i].qte;               
                     qteTable.push(qtePanier);
                 };        
-                
-                const reducer = (acc, curr) => acc + curr;
+
+                const reducer = (acc, curr) => acc + curr;//Calcule la somme d'un tableau
                 const totalQte = qteTable.reduce(reducer);
+
                 COMPTEUR.innerHTML = totalQte;
+
+                //Affiche les articles dans le panier
+
+                for(let i = 0; i < produits.length; i++){
+
+                    document.querySelector(".article-panier").innerHTML += 
+                    `<section class="card card-product section-panier">`+
+                    `<img class="img-panier"  src="`+produits[i].imageUrl+`">`+
+                        `<h2 class="card-title">`+produits[i].name+`</h2>`+
+                        `<span class="vertical-line"></span>`+
+                        `<p>`+produits[i].coul+`</p>`+
+                        `<span class="vertical-line"></span>`+
+                        `<p>Prix unit.: `+produits[i].price/100+`€</p>`+
+                        `<span class="vertical-line"></span>`+
+                        `<p>Quantité: `+produits[i].qte+`</p>`+
+                        `<span class="vertical-line"></span>`+
+                        `<p class="prixTotalArticlePanier">Prix total: `+produits[i].totalPrice/100+` €</p>`+
+                    `</section>`
+                };
             });
         };
     });
 };
-
+  
